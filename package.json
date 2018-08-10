@@ -1,7 +1,7 @@
 {
   "name": "modern-frontend-builder",
   "version": "1.0.0",
-  "description": "A package for building the styling and javascript in modern technologies and compile them to usable files.",
+  "description": "A boilderplate package for building the styling and javascript in modern technologies and compile them to usable files.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
