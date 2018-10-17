@@ -5,25 +5,20 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const LiveReloadPlugin = require("webpack-livereload-plugin");
 const poststylus = require("poststylus");
-
-const config = {
-  outputDir: "./dist",
-  entry: "./src/app.js"
-};
-
-if (true) {
-  // demo
-  config.outputDir = "./demo/dist";
-  config.entry = "./demo/app.js";
-}
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = env => {
+  const config = require(`./${process.env.npm_config_configFile ||
+    "config.json"}`);
+
   return [
     {
       entry: config.entry,
       output: {
         path: path.join(__dirname, config.outputDir),
-        filename: "[name].js",
+        filename: "[name].[chunkhash].js",
+        chunkFilename: "[id].[chunkhash].js",
         publicPath: "/dist/"
       },
       optimization: {
@@ -66,8 +61,11 @@ module.exports = env => {
         ]
       },
       plugins: [
+        new CleanWebpackPlugin(`${config.outputDir}/*`, {
+          allowExternal: true
+        }),
         new MiniCssExtractPlugin({
-          filename: "[name].css"
+          filename: "[name].[chunkhash].css"
         }),
         new LiveReloadPlugin({
           appendScriptTag: true,
@@ -82,6 +80,16 @@ module.exports = env => {
               use: [poststylus(["autoprefixer"])]
             }
           }
+        }),
+        new HtmlWebpackPlugin({
+          filename: "scripts.html",
+          template: "./src/templates/scripts.html",
+          inject: false
+        }),
+        new HtmlWebpackPlugin({
+          filename: "styles.html",
+          template: "./src/templates/styles.html",
+          inject: false
         })
       ]
     }
