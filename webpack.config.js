@@ -3,23 +3,62 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const LiveReloadPlugin = require("webpack-livereload-plugin");
 const poststylus = require("poststylus");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const LiveReloadPlugin = require("webpack-livereload-plugin");
 
 module.exports = env => {
-  const config = require(`./${process.env.npm_config_configFile ||
-    "config.json"}`);
+  const config = require(`./config.json`);
+  const outputDir =
+    process.env.npm_lifecycle_script.indexOf("webpack --watch") === -1
+      ? config.outputDir
+      : config.publishedPath;
+
+  const plugins = [
+    new CleanWebpackPlugin(`${outputDir}/*`, {
+      allowExternal: true
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].[chunkhash].css"
+    }),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        stylus: {
+          use: [poststylus(["autoprefixer"])]
+        }
+      }
+    }),
+    new HtmlWebpackPlugin({
+      filename: "scripts.html",
+      template: "./src/templates/scripts.html",
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      filename: "styles.html",
+      template: "./src/templates/styles.html",
+      inject: false
+    })
+  ];
+
+  if (process.env.npm_lifecycle_script.indexOf("webpack --watch") !== -1) {
+    plugins.push(
+      new LiveReloadPlugin({
+        delay: 50
+      })
+    );
+  }
 
   return [
     {
-      entry: config.entry,
+      entry: "./app.js",
       output: {
-        path: path.join(__dirname, config.outputDir),
+        path: path.isAbsolute(outputDir)
+          ? path.normalize(outputDir)
+          : path.join(__dirname, outputDir),
         filename: "[name].[chunkhash].js",
         chunkFilename: "[id].[chunkhash].js",
-        publicPath: "/dist/"
+        publicPath: config.publicPath
       },
       optimization: {
         minimizer: [
@@ -57,41 +96,25 @@ module.exports = env => {
           {
             test: /\.styl$/,
             use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"]
+          },
+          {
+            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            exclude: /node_modules/,
+            loader: "file-loader?limit=1024&name=fonts/[name].[ext]"
+          },
+          {
+            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            exclude: /node_modules/,
+            loader: "file-loader?limit=1024&name=fonts/[name].[ext]"
+          },
+          {
+            test: /\.(png|jpg|jpeg)$/,
+            exclude: /node_modules/,
+            loader: "file-loader?limit=1024&name=[name].[ext]"
           }
         ]
       },
-      plugins: [
-        new CleanWebpackPlugin(`${config.outputDir}/*`, {
-          allowExternal: true
-        }),
-        new MiniCssExtractPlugin({
-          filename: "[name].[chunkhash].css"
-        }),
-        new LiveReloadPlugin({
-          appendScriptTag: true,
-          protocol: "http",
-          hostname: "127.0.0.1",
-          port: "35729",
-          delay: 50
-        }),
-        new webpack.LoaderOptionsPlugin({
-          options: {
-            stylus: {
-              use: [poststylus(["autoprefixer"])]
-            }
-          }
-        }),
-        new HtmlWebpackPlugin({
-          filename: "scripts.html",
-          template: "./src/templates/scripts.html",
-          inject: false
-        }),
-        new HtmlWebpackPlugin({
-          filename: "styles.html",
-          template: "./src/templates/styles.html",
-          inject: false
-        })
-      ]
+      plugins: plugins
     }
   ];
 };
