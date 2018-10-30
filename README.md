@@ -2,20 +2,22 @@
 
 Setup:
 
-Edit config.json
+Edit *config.json*
 
-outputDir: This points to the assets folder in your webpage project.
-publicPath: This is the public path to the above folder when served through a web server.
-publishedPath: This is the direct path to where you run your local webserver, used for watch and build:dev modes.
+**outputDir**: This points to the assets folder in your webpage project.
+
+**publicPath**: This is the public path to the above folder when served through a web server.
+
+**publishedPath**: This is the direct path to where you run your local webserver, used for watch mode.
 
 To run watch mode:
-$ npm run watch
+`$ npm run watch`
 
 To build unminified code
-$ npm run build:dev
+`$ npm run build:dev`
 
 To build minified production code
-$ npm install && npm run build
+`$ npm install && npm run build`
 
 ---
 
