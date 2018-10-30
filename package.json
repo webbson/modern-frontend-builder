@@ -9,7 +9,7 @@
     "build": "webpack --mode=production --optimize-minimize",
     "build:dev": "webpack --mode=development"
   },
-  "author": "Tom Stevens",
+  "author": "Tom Stevens <tom@stevens.se> (https://www.stevens.se/)",
   "license": "ISC",
   "repository": {
     "type" : "git",
