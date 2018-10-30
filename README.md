@@ -1,6 +1,6 @@
 # Build ES6 and Sass/Less/Stylus for your Sitecore frontend project.
 
-Setup:
+## Setup:
 
 Edit *config.json*
 ```json
@@ -17,21 +17,23 @@ Edit *config.json*
 
 **publishedPath**: This is the direct path to where you run your local webserver, used for watch mode.
 
-To run watch mode:
-`$ npm run watch`
-
-To build unminified code
-`$ npm run build:dev`
-
-To build minified production code
-`$ npm install && npm run build`
-
 ---
 
-To build code: add your js, styl, less, sass or scss files anywhere inside the src folder. Just make sure they're named index.\* to be picked up by the build script.
+## To build code: 
+Add your js, styl, less, sass or scss files anywhere inside the src folder. Just make sure they're named index.\* to be picked up by the build script.
 
 In your csproj file for the webpage project add the following with the correct path that matches the publicPath in your assets folder to autoinclude all files on build.
 
     <ItemGroup>
         <Content Include="assets\ProjNAME\**" />
     </ItemGroup>`
+
+
+To run watch mode:
+`$ npm run watch`
+
+To build unminified code:
+`$ npm run build:dev`
+
+To build minified production code:
+`$ npm install && npm run build`
