@@ -1,7 +1,7 @@
 {
   "name": "modern-frontend-builder",
   "version": "1.0.0",
-  "description": "A boilderplate package for building the styling and javascript in modern technologies and compile them to usable files.",
+  "description": "Build and compile ES6/Sass/Less/Stylus to a project of your flavor.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,10 @@
   },
   "author": "Tom Stevens",
   "license": "ISC",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/webbson/modern-frontend-builder.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^9.2.1",
